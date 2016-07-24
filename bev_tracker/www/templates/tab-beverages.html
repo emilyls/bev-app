@@ -1,0 +1,11 @@
+<ion-view view-title="Beverages">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="beverage in beverages" type="item-text-wrap" href="#/tab/beverages/{{beverage.id}}">
+        <h2>{{beverage.bev_name}}</h2>
+        <p>{{beverage.brand_name}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

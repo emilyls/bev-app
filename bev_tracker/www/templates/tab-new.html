@@ -1,0 +1,21 @@
+<ion-view view-title="Add Beverage">
+  <ion-content class="padding">
+    <form name="new_bev_form" class="list" ng-submit="AddBeverage(bev)">
+        <div>
+            <label class="item item-input">
+                <input type="text" placeholder="Beverage Name" ng-model="bev.bev_name" />
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Brand Name" ng-model="bev.brand_name" />
+            </label>
+            <label class="item item-input">
+                <input type="number" placeholder="Rating" ng-model="bev.value" min="0" max="10" name="rating" />
+            </label>
+            <label class="item item-input">
+                <textarea ng-model="bev.notes" placeholder="Notes"></textarea>
+            </label>
+        </div>
+        <button type="submit" class="button button-full button-balanced">Submit</button>
+    </form>
+  </ion-content>
+</ion-view>

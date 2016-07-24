@@ -1,0 +1,234 @@
+angular.module('starter.controllers', [])
+
+.controller('NewCtrl', function ($scope, Beverages, $http) {
+
+    $scope.stores;
+    $scope.status;
+
+    getAllStores();
+
+    $scope.bev = {};
+
+    function getAllStores() {
+        Beverages.getAllStores()
+            .then(function (response) {
+                $scope.stores = response.data;
+            }, function (error) {
+                $scope.status = 'Unable to load stores: ' + error.message;
+                console.log(error);
+            });
+    }
+
+    $scope.AddBeverage = function (data) {
+
+        newBev = {
+            bev_name: data.bev_name,
+            brand_name: data.brand_name
+        };
+
+        if (data.value) {
+            newRating = {
+                value: data.value
+            };
+            if (data.notes) {
+                newRating.notes = data.notes;
+            }
+        }
+
+        Beverages.addBeverage(encodeData(newBev))
+            .then(function (response) {
+                newRating.bev_id = response.data.id;
+                $scope.bev = {};
+                Beverages.addRating(encodeData(newRating))
+                    .then(function (response) {
+                        console.log(response);
+                    }, function (error) {
+                        console.log(error);
+                    });
+            }, function (error) {
+                console.log(error);
+                $scope.status = 'Unable to add beverage: ' + error.message;
+            });
+      
+    }
+})
+
+.controller('BeveragesCtrl', function($scope, Beverages) {
+
+    $scope.status;
+    $scope.beverages;
+    
+    getAllBeverages();
+    
+
+    function getAllBeverages() {
+        Beverages.getAllBeverages()
+            .then(function (response) {
+                $scope.beverages = response.data;
+            }, function (error) {
+                $scope.status = 'Unable to load beverages: ' + error.message;
+            });
+    }
+
+
+})
+
+.controller('BeverageDetailCtrl', function ($scope, $stateParams, Beverages, $ionicModal) {
+
+    $scope.status;
+    $scope.beverage;
+    $scope.average;
+
+    $scope.bevStores;
+    $scope.otherStores;
+
+    getBeverage();
+    getStores();
+
+    $scope.price = {};
+
+    function getBeverage() {
+        total = 0;
+        count = 0;
+        average = 0;
+        Beverages.getBeverage($stateParams.beverageId)
+            .then(function (response) {
+                $scope.beverage = response.data[0];
+                count = $scope.beverage.ratings.length;
+                for (var i = 0; i < count; i++) {
+                    total += $scope.beverage.ratings[i].value;
+                }
+                $scope.average = total / count;
+            }, function (error) {
+                $scope.status = 'Unable to load beverage details ' + error.message;
+            });
+    }
+
+
+    function getStores() {
+        Beverages.getAllStores()
+            .then(function (response) {
+                var allStores = response.data;
+                $scope.bevStores = [];
+                $scope.otherStores = [];
+                for (var i = 0; i < allStores.length; i++) {
+                    var numBevs = allStores[i].prices.length;
+                    for (j = 0; j < numBevs; j++) {
+                        if (allStores[i].prices[j].beverage == $stateParams.beverageId) {
+                            var price = {
+                                store: allStores[i],
+                                price: allStores[i].prices[j]
+                            };
+                            $scope.bevStores.push(price);
+                            break;
+                        }
+                    }
+                    if (j == numBevs) {
+                        $scope.otherStores.push(allStores[i]);
+                    }
+                }
+                console.log($scope.bevStores);
+            }, function (error) {
+                $scope.status = 'Unable to load stores: ' + error.message;
+            });
+    }
+
+    $ionicModal.fromTemplateUrl('addReview.html', {
+        id: '1',
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.oModal1 = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('addStore.html', {
+        id: '2',
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.oModal2 = modal;
+    });
+
+    $scope.openModal = function (index) {
+        if (index == 1) $scope.oModal1.show();
+        else $scope.oModal2.show();
+    };
+    $scope.closeModal = function (index) {
+        if (index == 1) $scope.oModal1.hide();
+        else $scope.oModal2.hide();
+    };
+    $scope.$on('$destroy', function () {
+        $scope.oModal1.remove();
+        $scope.oModal2.remove();
+    });
+
+    $scope.AddReview = function (data) {
+        var rating = {
+            bev_id: parseInt($stateParams.beverageId, 10),
+            value: data.rating
+        };
+
+        if (data.notes) {
+            rating.notes = data.notes;
+        }
+        
+        Beverages.addRating(encodeData(rating))
+            .then(function (response) {
+                console.log('Added review!');
+                getBeverage();
+            }, function (error) {
+                console.log(error);
+                $scope.status = 'Unable to add review: ' + error.message;
+            });
+        $scope.closeModal(1);
+    };
+
+    $scope.AddStore = function (data) {
+
+        console.log(data);
+        if (data.price && data.day && data.month && data.year && data.size && data.units && data.store_id) {
+            var newPrice = data;
+            newPrice.bev_id = parseInt($stateParams.beverageId, 10);
+            console.log(newPrice);
+
+            Beverages.addPrice(encodeData(newPrice))
+                .then(function (response) {
+                    console.log('Added Price!');
+                    getStore();
+                    getBeverage();
+                    $scope.price = {};
+                }, function (error) {
+                    console.log(error);
+                });
+        }
+        $scope.closeModal(2);
+    };
+
+    $scope.DeleteBeverage = function () {
+        
+
+        Beverages.deleteBeverage(parseInt($stateParams.beverageId, 10))
+            .then(function (response) {
+                console.log('Beverage Deleted');
+                $state.go('tab.beverages');
+            }, function (error) {
+                console.log(error);
+            });
+    };
+
+})
+
+.controller('AccountCtrl', function($scope) {
+  $scope.settings = {
+    enableFriends: true
+  };
+});
+
+
+function encodeData(data) {
+    var dataString = [];
+    for (var d in data) {
+        dataString.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+    }
+    return dataString.join("&");
+}

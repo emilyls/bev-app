@@ -1,0 +1,79 @@
+<ion-view view-title="More Information">
+    <ion-content class="padding">
+        <h3>{{beverage.bev_name}}</h3>
+        <h5>{{beverage.brand_name}}</h5>
+        <h5 ng-if="average">Average Rating = {{average | number : 2}}</h5>
+        <div class="list list-inset">
+            <div class="item" ng-repeat="rating in beverage.ratings">
+                {{rating.value}}
+                <div>{{rating.notes}}</div>
+            </div>
+            <button class="button icon-left ion-android-add-circle" ng-click="openModal(1)">New Review</button>
+        </div>
+        <div class="list">
+            <div ng-repeat="store in bevStores">
+                <label class="list">
+                        <h4>{{store.store.name}}: ${{store.price.price}} - {{store.price.size}} {{store.price.units}}</h4>
+                        <div>{{store.store.address.street}}, {{store.store.address.city}}, {{store.store.address.state}}</div>
+                </label>
+            </div>
+            <button class="button icon-left ion-android-add-circle" checked ng-click="openModal(2)">Add Store</button>
+        </div>
+
+    </ion-content>
+    <div class="bar bar-footer bar-assertive">
+        <button class="button button-full button-assertive" ng-click="DeleteBeverage()">Delete</button>
+    </div>
+</ion-view>
+
+
+<script id="addReview.html" type="text/ng-template">
+    <div class="modal">
+        <button class="button icon-left ion-android-close" ng-click="closeModal(1)"></button>
+        <form class="list"  ng-submit="AddReview(review)">
+            <label class="item item-input">
+                <input type="number" placeholder="Rating" min="0" max="10"  ng-required ng-model="review.rating" />
+            </label>
+            <label class="item item-input">
+                <textarea placeholder="Notes" ng-model="review.notes"></textarea>
+            </label>
+            <button type="submit" class="button button-block button-positive">Submit</button>
+        </form>
+    </div>
+</script>
+
+<script id="addStore.html" type="text/ng-template">
+    <div class="modal">
+        <button class="button icon-left ion-android-close" ng-click="closeModal(2)"></button>
+        <form class="list" ng-submit="AddStore(price)">
+            <label class="item item-input">
+                <input type="number" placeholder="Price" min="0" ng-model="price.price" />
+            </label>
+            <label class="item item-input">
+                <input type="number" placeholder="Day" min="1" max="31" ng-model="price.day"/>
+            </label>
+            <label class="item item-input">
+                <input type="number" placeholder="Month" min="1" max="12" ng-model="price.month"/>
+            </label>
+            <label class="item item-input">
+                <input type="number" placeholder="Year" min="2016" ng-model="price.year"/>
+            </label>
+            <label class="item item-input">
+                <input type="number" placeholder="Size" ng-model="price.size"/>
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Units" ng-model="price.units"/>
+            </label>
+            <label ng-repeat="store in otherStores">
+                <ion-radio ng-model="price.store_id" ng-value="store.id">
+                    <h4>{{store.name}}</h4>
+                    {{store.address.city}}, {{store.address.state}}
+                </ion-radio>
+            </label>
+            <label>
+                <button class="button icon-left ion-android-add-circle">New Store</button>
+            </label>
+            <button type="submit" class="button button-block button-positive">Submit</button>
+        </form>
+    </div>
+</script>
