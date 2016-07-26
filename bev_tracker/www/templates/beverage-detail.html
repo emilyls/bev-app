@@ -1,4 +1,4 @@
-<ion-view view-title="More Information">
+<ion-view view-title="">
     <ion-content class="padding">
         <h3>{{beverage.bev_name}}</h3>
         <h5>{{beverage.brand_name}}</h5>
@@ -17,13 +17,13 @@
                         <div>{{store.store.address.street}}, {{store.store.address.city}}, {{store.store.address.state}}</div>
                 </label>
             </div>
-            <button class="button icon-left ion-android-add-circle" checked ng-click="openModal(2)">Add Store</button>
+            <button class="button icon-left ion-android-add-circle" checked ng-click="openModal(2)">Add Price Info</button>
         </div>
 
     </ion-content>
-    <div class="bar bar-footer bar-assertive">
+    <ion-footer-bar class="bar bar-footer bar-assertive">
         <button class="button button-full button-assertive" ng-click="DeleteBeverage()">Delete</button>
-    </div>
+    </ion-footer-bar>
 </ion-view>
 
 
@@ -42,10 +42,10 @@
     </div>
 </script>
 
-<script id="addStore.html" type="text/ng-template">
+<script id="addPrice.html" type="text/ng-template">
     <div class="modal">
         <button class="button icon-left ion-android-close" ng-click="closeModal(2)"></button>
-        <form class="list" ng-submit="AddStore(price)">
+        <form class="list" ng-submit="AddPrice(price)">
             <label class="item item-input">
                 <input type="number" placeholder="Price" min="0" ng-model="price.price" />
             </label>
@@ -71,7 +71,31 @@
                 </ion-radio>
             </label>
             <label>
-                <button class="button icon-left ion-android-add-circle">New Store</button>
+                <button class="button icon-left ion-android-add-circle" ng-click="openModal(3)">New Store</button>
+            </label>
+            <button type="submit" class="button button-block button-positive">Submit</button>
+        </form>
+    </div>
+</script>
+
+<script id="addStore.html" type="text/ng-template">
+    <div class="modal">
+        <button class="button icon-left ion-android-close" ng-click="closeModal(3)"></button>
+        <form class="list" ng-submit="AddStore(store)">
+            <label class="item item-input">
+                <input type="text" placeholder="Store Name" ng-model="store.name" />
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Street Address" ng-model="store.street" />
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="City" ng-model="store.city" />
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="State" ng-model="store.state" />
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Country" ng-model="store.country" />
             </label>
             <button type="submit" class="button button-block button-positive">Submit</button>
         </form>

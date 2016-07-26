@@ -73,7 +73,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('BeverageDetailCtrl', function ($scope, $stateParams, Beverages, $ionicModal) {
+.controller('BeverageDetailCtrl', function ($scope, $stateParams, Beverages, $ionicModal, $state) {
 
     $scope.status;
     $scope.beverage;
@@ -141,7 +141,7 @@ angular.module('starter.controllers', [])
         $scope.oModal1 = modal;
     });
 
-    $ionicModal.fromTemplateUrl('addStore.html', {
+    $ionicModal.fromTemplateUrl('addPrice.html', {
         id: '2',
         scope: $scope,
         animation: 'slide-in-up'
@@ -149,17 +149,28 @@ angular.module('starter.controllers', [])
         $scope.oModal2 = modal;
     });
 
+    $ionicModal.fromTemplateUrl('addStore.html', {
+        id: '3',
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.oModal3 = modal;
+    });
+
     $scope.openModal = function (index) {
         if (index == 1) $scope.oModal1.show();
-        else $scope.oModal2.show();
+        else if (index == 2) $scope.oModal2.show();
+        else $scope.oModal3.show();
     };
     $scope.closeModal = function (index) {
         if (index == 1) $scope.oModal1.hide();
-        else $scope.oModal2.hide();
+        else if (index == 2) $scope.oModal2.hide();
+        else $scope.oModal3.hide();
     };
     $scope.$on('$destroy', function () {
         $scope.oModal1.remove();
         $scope.oModal2.remove();
+        $scope.oModal3.remove();
     });
 
     $scope.AddReview = function (data) {
@@ -183,13 +194,10 @@ angular.module('starter.controllers', [])
         $scope.closeModal(1);
     };
 
-    $scope.AddStore = function (data) {
-
-        console.log(data);
+    $scope.AddPrice = function (data) {
         if (data.price && data.day && data.month && data.year && data.size && data.units && data.store_id) {
             var newPrice = data;
             newPrice.bev_id = parseInt($stateParams.beverageId, 10);
-            console.log(newPrice);
 
             Beverages.addPrice(encodeData(newPrice))
                 .then(function (response) {
@@ -204,9 +212,24 @@ angular.module('starter.controllers', [])
         $scope.closeModal(2);
     };
 
-    $scope.DeleteBeverage = function () {
-        
+    $scope.AddStore = function (data) {
+        if (data.name && data.street && data.city && data.state && data.country) {
 
+            Beverages.addStore(encodeData(data))
+                .then(function (response) {
+                    console.log('Added Store!');
+                    getStore();
+                    getBeverage();
+                    $scope.price = {};
+                }, function (error) {
+                    console.log(error);
+                });
+        }
+        $scope.closeModal(3);
+        $scope.AddPrice();
+    };
+
+    $scope.DeleteBeverage = function () {
         Beverages.deleteBeverage(parseInt($stateParams.beverageId, 10))
             .then(function (response) {
                 console.log('Beverage Deleted');

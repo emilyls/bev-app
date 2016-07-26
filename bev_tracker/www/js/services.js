@@ -44,6 +44,15 @@ angular.module('starter.services', [])
         });
     };
 
+    Beverages.addStore = function (storeData) {
+        return $http({
+            method: 'POST',
+            url: urlBase + 'Store',
+            data: storeData,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+    };
+
     Beverages.deleteBeverage = function (beverageID) {
         return $http.delete(urlBase + 'Beverage/' + beverageID);
     };
