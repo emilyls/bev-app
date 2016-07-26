@@ -195,8 +195,16 @@ angular.module('starter.controllers', [])
     };
 
     $scope.AddPrice = function (data) {
-        if (data.price && data.day && data.month && data.year && data.size && data.units && data.store_id) {
-            var newPrice = data;
+        if (data.price && data.date && data.size && data.units && data.store_id) {
+            var newPrice = {
+                price: data.price,
+                day: data.date.getDate(),
+                month: data.date.getMonth() + 1,
+                year: data.date.getFullYear(),
+                size: data.size,
+                units: data.units,
+                store_id: data.store_id
+            };
             newPrice.bev_id = parseInt($stateParams.beverageId, 10);
 
             Beverages.addPrice(encodeData(newPrice))
