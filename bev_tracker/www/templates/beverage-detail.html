@@ -31,13 +31,14 @@
     <div class="modal">
         <ion-content class="padding">
             <button class="button icon-left ion-android-close" ng-click="closeModal(1)"></button>
-            <form class="list" ng-submit="AddReview(review)">
+            <form name="reviewForm" class="list" ng-submit="AddReview(review)">
                 <label class="item item-input">
-                    <input type="number" placeholder="Rating" min="0" max="10" ng-required ng-model="review.rating" />
+                    <input name="rating" type="number" placeholder="Rating" min="0" max="10" ng-model="review.rating" required />
                 </label>
                 <label class="item item-input">
                     <textarea placeholder="Notes" ng-model="review.notes"></textarea>
                 </label>
+                <span ng-show="reviewForm.rating.$error.required == true" style="color:red">* a rating is required</span>
                 <button type="submit" class="button button-block button-positive">Submit</button>
             </form>
         </ion-content>
@@ -48,21 +49,21 @@
     <div class="modal">
         <ion-content class="padding">
             <button class="button icon-left ion-android-close" ng-click="closeModal(2)"></button>
-            <form class="list" ng-submit="AddPrice(price)">
+            <form name="priceForm" class="list" ng-submit="AddPrice(price)">
                 <label class="item item-input">
-                    <input type="number" placeholder="Price" min="0" step="0.01" ng-model="price.price" required />
+                    <input name="price" type="number" placeholder="Price" min="0" step="0.01" ng-model="price.price" required />
                 </label>
                 <label class="item item-input">
-                    <input type="date" placeholder="Size" ng-model="price.date" required />
+                    <input name="date" type="date" placeholder="Size" ng-model="price.date" required />
                 </label>
                 <label class="item item-input">
-                    <input type="number" placeholder="Size" ng-model="price.size" required />
+                    <input name="size" type="number" placeholder="Size" ng-model="price.size" required />
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="Units" ng-model="price.units" required />
+                    <input name="units" type="text" placeholder="Units" ng-model="price.units" required />
                 </label>
                 <label ng-repeat="store in otherStores">
-                    <ion-radio ng-model="price.store_id" ng-value="store.id" required>
+                    <ion-radio name="store_id" ng-model="price.store_id" ng-value="store.id" ng-required="true" >
                         <h4>{{store.name}}</h4>
                         {{store.address.city}}, {{store.address.state}}
                     </ion-radio>
@@ -70,6 +71,7 @@
                 <label>
                     <button class="button icon-left ion-android-add-circle" ng-click="openModal(3)">New Store</button>
                 </label>
+                <span ng-show="priceForm.price.$error.required == true || priceForm.date.$error.required == true || priceForm.size.$error.required == true || priceForm.units.$error.required == true || priceForm.store_id.$error.required == true" style="color:red">* all fields are required</span>
                 <button type="submit" class="button button-block button-positive">Submit</button>
             </form>
         </ion-content>
@@ -80,22 +82,23 @@
     <div class="modal">
         <ion-content class="padding">
             <button class="button icon-left ion-android-close" ng-click="closeModal(3)"></button>
-            <form class="list" ng-submit="AddStore(store)">
+            <form name="storeForm" class="list" ng-submit="AddStore(store)">
                 <label class="item item-input">
-                    <input type="text" placeholder="Store Name" ng-model="store.name" />
+                    <input name="name" type="text" placeholder="Store Name" ng-model="store.name" required />
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="Street Address" ng-model="store.street" />
+                    <input name="street" type="text" placeholder="Street Address" ng-model="store.street" required />
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="City" ng-model="store.city" />
+                    <input name="city" type="text" placeholder="City" ng-model="store.city" required />
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="State" ng-model="store.state" />
+                    <input name="state" type="text" placeholder="State" ng-model="store.state" required />
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="Country" ng-model="store.country" />
+                    <input name="country" type="text" placeholder="Country" ng-model="store.country" required />
                 </label>
+                <span ng-show="storeForm.name.$error.required == true || storeForm.street.$error.required == true || storeForm.city.$error.required == true || storeForm.state.$error.required == true || storeForm.country.$error.required == true" style="color:red">* all fields are required</span>
                 <button type="submit" class="button button-block button-positive">Submit</button>
             </form>
         </ion-content>
