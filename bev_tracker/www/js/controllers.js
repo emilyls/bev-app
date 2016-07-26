@@ -5,22 +5,10 @@ angular.module('starter.controllers', [])
     $scope.stores;
     $scope.status;
 
-    getAllStores();
 
     $scope.bev = {};
 
-    function getAllStores() {
-        Beverages.getAllStores()
-            .then(function (response) {
-                $scope.stores = response.data;
-            }, function (error) {
-                $scope.status = 'Unable to load stores: ' + error.message;
-                console.log(error);
-            });
-    }
-
     $scope.AddBeverage = function (data) {
-
         newBev = {
             bev_name: data.bev_name,
             brand_name: data.brand_name
@@ -57,20 +45,22 @@ angular.module('starter.controllers', [])
 
     $scope.status;
     $scope.beverages;
-    
-    getAllBeverages();
-    
 
-    function getAllBeverages() {
-        Beverages.getAllBeverages()
-            .then(function (response) {
-                $scope.beverages = response.data;
-            }, function (error) {
-                $scope.status = 'Unable to load beverages: ' + error.message;
-            });
+
+
+    init();
+    function init() {
+        $scope.$on('$ionicView.enter', function (e) {
+                Beverages.getAllBeverages()
+                    .then(function (response) {
+                        $scope.bev = {};
+                        $scope.beverages = response.data;
+                    }, function (error) {
+                        $scope.status = 'Unable to load beverages: ' + error.message;
+                    });
+        });
     }
-
-
+   
 })
 
 .controller('BeverageDetailCtrl', function ($scope, $stateParams, Beverages, $ionicModal, $state) {
@@ -78,14 +68,21 @@ angular.module('starter.controllers', [])
     $scope.status;
     $scope.beverage;
     $scope.average;
-
     $scope.bevStores;
     $scope.otherStores;
 
-    getBeverage();
-    getStores();
-
     $scope.price = {};
+    $scope.store = {};
+    $scope.review = {};
+
+
+    init();
+    function init() {
+        $scope.$on('$ionicView.enter', function (e) {
+            getBeverage();
+            getStores();
+        });
+    }
 
     function getBeverage() {
         total = 0;
@@ -127,7 +124,6 @@ angular.module('starter.controllers', [])
                         $scope.otherStores.push(allStores[i]);
                     }
                 }
-                console.log($scope.bevStores);
             }, function (error) {
                 $scope.status = 'Unable to load stores: ' + error.message;
             });
@@ -160,12 +156,24 @@ angular.module('starter.controllers', [])
     $scope.openModal = function (index) {
         if (index == 1) $scope.oModal1.show();
         else if (index == 2) $scope.oModal2.show();
-        else $scope.oModal3.show();
+        else {
+            $scope.store.country = 'USA';
+            $scope.oModal3.show();
+        }
     };
     $scope.closeModal = function (index) {
-        if (index == 1) $scope.oModal1.hide();
-        else if (index == 2) $scope.oModal2.hide();
-        else $scope.oModal3.hide();
+        if (index == 1) {
+            $scope.review = {};
+            $scope.oModal1.hide();
+        }
+        else if (index == 2) {
+            $scope.price = {};
+            $scope.oModal2.hide();
+        }
+        else {
+            $scope.store = {};
+            $scope.oModal3.hide();
+        }
     };
     $scope.$on('$destroy', function () {
         $scope.oModal1.remove();
@@ -210,7 +218,7 @@ angular.module('starter.controllers', [])
             Beverages.addPrice(encodeData(newPrice))
                 .then(function (response) {
                     console.log('Added Price!');
-                    getStore();
+                    getStores();
                     getBeverage();
                     $scope.price = {};
                 }, function (error) {
@@ -226,7 +234,7 @@ angular.module('starter.controllers', [])
             Beverages.addStore(encodeData(data))
                 .then(function (response) {
                     console.log('Added Store!');
-                    getStore();
+                    getStores();
                     getBeverage();
                     $scope.price = {};
                 }, function (error) {

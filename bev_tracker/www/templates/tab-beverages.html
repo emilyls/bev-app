@@ -1,7 +1,11 @@
 <ion-view view-title="Beverages">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="beverage in beverages" type="item-text-wrap" href="#/tab/beverages/{{beverage.id}}">
+        <label class="item-avatar item-input">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="text" ng-model="searchText" placeholder="Beverage Name Search">
+        </label>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="beverage in beverages |  orderBy:'brand_name' | filter:{ bev_name: searchText}" type="item-text-wrap" href="#/tab/beverages/{{beverage.id}}">
         <h2>{{beverage.bev_name}}</h2>
         <p>{{beverage.brand_name}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
