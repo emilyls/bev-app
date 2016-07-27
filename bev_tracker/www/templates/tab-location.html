@@ -1,0 +1,19 @@
+<ion-view view-title="Near Me">
+    <ion-content>
+        <h4 ng-if="city" style="text-align:center">{{city}}, {{state}}, {{country}}</h4>
+        <h5 ng-if="lat" style="text-align:center">({{lat}}, {{long}})</h5>
+        <ion-list ng-repeat="store in stores">
+            <div class="item item-divider">{{store.store.name}} - {{store.store.address.street}}</div>
+            <!--<ion-list ng-repeat="beverage in store.beverages"> -->
+                <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="beverage in store.beverages |  orderBy:'brand_name'" type="item-text-wrap" href="#/tab/location/{{beverage.id}}">
+                    <h2>{{beverage.bev_name}}</h2>
+                    <p>{{beverage.brand_name}}</p>
+                    <i class="icon ion-chevron-right icon-accessory"></i>
+                </ion-item>
+            <!-- </ion-list>-->
+        </ion-list>
+    </ion-content>
+    <ion-footer-bar class="bar bar-footer bar-royal">
+        <button class="button button-full button-royal icon-left ion-android-locate" ng-click="getLocation()">Find Beverages Near Me</button>
+    </ion-footer-bar>
+</ion-view>

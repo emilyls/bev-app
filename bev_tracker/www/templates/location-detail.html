@@ -1,0 +1,107 @@
+<ion-view view-title="">
+    <ion-content class="padding">
+        <h3>{{beverage.bev_name}}</h3>
+        <h5>{{beverage.brand_name}}</h5>
+        <h5 ng-if="average">Average Rating = {{average | number : 2}}</h5>
+        <div class="list list-inset">
+            <div class="item" ng-repeat="rating in beverage.ratings">
+                {{rating.value}} 
+                <div>{{rating.notes}}</div>
+            </div>
+            <button class="button icon-left ion-android-add-circle" ng-click="openModal(1)">New Review</button>
+        </div>
+        <div class="list">
+            <div ng-repeat="store in bevStores">
+                <div class="list">
+                        <h4>{{store.store.name}}: ${{store.price.price | number : 2}} - {{store.price.size}} {{store.price.units}}</h4>
+                        <div>{{store.store.address.street}}, {{store.store.address.city}}, {{store.store.address.state}}</div>
+                </div>
+            </div>
+            <button class="button icon-left ion-android-add-circle" checked ng-click="openModal(2)">Add Price Info</button>
+        </div>
+
+    </ion-content>
+    <ion-footer-bar class="bar bar-footer bar-assertive">
+        <button class="button button-full button-assertive" ng-click="DeleteBeverage()">Delete</button>
+    </ion-footer-bar>
+</ion-view>
+
+
+<script id="addReviewLocation.html" type="text/ng-template">
+    <div class="modal">
+        <ion-content class="padding">
+            <button class="button icon-left ion-android-close" ng-click="closeModal(1)"></button>
+            <form name="reviewForm" class="list" ng-submit="AddReview(review)">
+                <label class="item item-input">
+                    <input name="rating" type="number" placeholder="Rating" min="0" max="10" step="0.1" ng-model="review.rating" required />
+                </label>
+                <label class="item item-input">
+                    <textarea placeholder="Notes" ng-model="review.notes"></textarea>
+                </label>
+                <span ng-show="reviewForm.rating.$error.required == true" style="color:red">* a rating is required</span>
+                <button type="submit" class="button button-block button-positive">Submit</button>
+            </form>
+        </ion-content>
+    </div>
+</script>
+
+<script id="addPriceLocation.html" type="text/ng-template">
+    <div class="modal">
+        <ion-content class="padding">
+            <button class="button icon-left ion-android-close" ng-click="closeModal(2)"></button>
+            <form name="priceForm" class="list" ng-submit="AddPrice(price)">
+                <label class="item item-input">
+                    <input name="price" type="number" placeholder="Price" min="0" step="0.01" ng-model="price.price" required />
+                </label>
+                <label class="item item-input">
+                    <input name="date" type="date" placeholder="Size" ng-model="price.date" required />
+                </label>
+                <label class="item item-input">
+                    <input name="size" type="number" placeholder="Size" ng-model="price.size" required />
+                </label>
+                <label class="item item-input">
+                    <input name="units" type="text" placeholder="Units" ng-model="price.units" required />
+                </label>
+                <label ng-repeat="store in otherStores">
+                    <ion-radio name="store_id" ng-model="price.store_id" ng-value="store.id" ng-required="true" >
+                        <h4>{{store.name}}</h4>
+                        {{store.address.city}}, {{store.address.state}}
+                    </ion-radio>
+                </label>
+                <label>
+                    <button class="button icon-left ion-android-add-circle" ng-click="openModal(3)">New Store</button>
+                </label>
+                <span ng-show="priceForm.price.$error.required == true || priceForm.date.$error.required == true || priceForm.size.$error.required == true || priceForm.units.$error.required == true || priceForm.store_id.$error.required == true" style="color:red">* all fields are required</span>
+                <button type="submit" class="button button-block button-positive">Submit</button>
+            </form>
+        </ion-content>
+    </div>
+</script>
+
+<script id="addStoreLocation.html" type="text/ng-template">
+    <div class="modal">
+        <ion-content class="padding">
+            <button class="button icon-left ion-android-close" ng-click="closeModal(3)"></button>
+            <form name="storeForm" class="list" ng-submit="AddStore(store)">
+                <label class="item item-input">
+                    <input name="name" type="text" placeholder="Store Name" ng-model="store.name" required />
+                </label>
+                <label class="item item-input">
+                    <input name="street" type="text" placeholder="Street Address" ng-model="store.street" required />
+                </label>
+                <label class="item item-input">
+                    <input name="city" type="text" placeholder="City" ng-model="store.city" required />
+                </label>
+                <label class="item item-input">
+                    <input name="state" type="text" placeholder="State" ng-model="store.state" required />
+                </label>
+                <label class="item item-input">
+                    <input name="country" type="text" placeholder="Country" ng-model="store.country" required />
+                </label>
+                <span ng-show="storeForm.name.$error.required == true || storeForm.street.$error.required == true || storeForm.city.$error.required == true || storeForm.state.$error.required == true || storeForm.country.$error.required == true" style="color:red">* all fields are required</span>
+                <button type="submit" class="button button-block button-positive">Submit</button>
+            </form>
+        </ion-content>
+    </div>
+
+</script>
