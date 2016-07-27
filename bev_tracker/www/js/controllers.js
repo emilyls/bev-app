@@ -276,9 +276,8 @@ angular.module('starter.controllers', [])
             .then(function (position) {
                 var lat = position.coords.latitude;
                 var long = position.coords.longitude;
-                $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=')
+                $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=AIzaSyD2QqNMZck66iTtu6lrdTxMmmi5rX6kr_8')
                     .success(function (data, status, headers, config) {
-                        console.log(data.results[0]);
                         for (var i = 0; i < data.results[0].address_components.length; i++) {
                             if (data.results[0].address_components[i].types[0] == "administrative_area_level_1") {
                                 $scope.state = data.results[0].address_components[i].short_name;       // STATE
@@ -291,7 +290,19 @@ angular.module('starter.controllers', [])
                                 $scope.country = data.results[0].address_components[i].short_name;
                             }
                         }
-                        
+
+
+                        console.log($scope.city);
+                        console.log(encodeURIComponent($scope.city));
+                        console.log($scope.state);
+                        $http.get('http://bev-api.appspot.com/Store?city=' + encodeURIComponent($scope.city) + '&state=' + encodeURIComponent($scope.state))
+                            .success(function (data, status, headers, config) {
+                                $scope.stores = data;
+                                console.log(data);
+                            })
+                            .error(function (data, status, headers, config) {
+                                console.log(status);
+                            })
                         
                     })
                     .error(function (data, status, headers, config) {

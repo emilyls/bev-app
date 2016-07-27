@@ -16,6 +16,10 @@ angular.module('starter.services', [])
     Beverages.getAllStores = function () {
         return $http.get(urlBase + 'Store');
     };
+
+    Beverages.getStoresByLocation = function (city, state, country) {
+        return $http.get(urlBase + 'Store?city=' + city + '&state=' + state);
+    };
    
     Beverages.addRating = function (ratingData) {
         return $http({
