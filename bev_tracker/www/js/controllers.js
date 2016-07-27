@@ -451,7 +451,7 @@ angular.module('bev_tracker.controllers', [])
         Beverages.deleteBeverage(parseInt($stateParams.beverageId, 10))
             .then(function (response) {
                 console.log('Beverage Deleted');
-                $state.go('tab.beverages');
+                $state.go('tab.location');
             }, function (error) {
                 console.log(error);
             });
@@ -461,10 +461,16 @@ angular.module('bev_tracker.controllers', [])
 
 
 .controller('LocationCtrl', function ($scope, $cordovaGeolocation, $http) {
-
-    
-    
+    init();
+    function init() {
+        $scope.$on('$ionicView.enter', function (e) {
+            if ($scope.city && $scope.state) {
+                $scope.stores = getStores($scope.city, $scope.state);
+            }
+        });
+    }
     $scope.getLocation = function () {
+        $scope.stores = [];
         var posOptions = { timeout: 10000, enableHighAccuracy: false };
         $cordovaGeolocation
             .getCurrentPosition(posOptions)
@@ -486,18 +492,7 @@ angular.module('bev_tracker.controllers', [])
                             }
                         }
 
-                        $http.get('http://bev-api.appspot.com/Store?city=' + encodeURIComponent($scope.city) + '&state=' + encodeURIComponent($scope.state))
-                            .success(function (data, status, headers, config) {
-                                storeList = [];
-                                for (var i = 0; i < data.length; i++) {
-                                    storeList.push(getBeverages(data[i]))
-                                }
-                                $scope.stores = storeList;
-                                
-                            })
-                            .error(function (data, status, headers, config) {
-                                console.log(status);
-                            })
+                        $scope.stores = getStores($scope.city, $scope.state);
                         
                     })
                     .error(function (data, status, headers, config) {
@@ -509,6 +504,21 @@ angular.module('bev_tracker.controllers', [])
             }, function (error) {
                 console.log(error);
             });
+    }
+
+    function getStores(city, state) {
+        var storeList = [];
+        $http.get('http://bev-api.appspot.com/Store?city=' + encodeURIComponent(city) + '&state=' + encodeURIComponent(state))
+            .success(function (data, status, headers, config) {
+                for (var i = 0; i < data.length; i++) {
+                    storeList.push(getBeverages(data[i]))
+                }
+
+            })
+            .error(function (data, status, headers, config) {
+                console.log(status);
+            })
+        return storeList;
     }
 
     function getBeverages(store) {
