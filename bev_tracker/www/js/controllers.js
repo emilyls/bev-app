@@ -291,14 +291,14 @@ angular.module('starter.controllers', [])
                             }
                         }
 
-
-                        console.log($scope.city);
-                        console.log(encodeURIComponent($scope.city));
-                        console.log($scope.state);
                         $http.get('http://bev-api.appspot.com/Store?city=' + encodeURIComponent($scope.city) + '&state=' + encodeURIComponent($scope.state))
                             .success(function (data, status, headers, config) {
-                                $scope.stores = data;
-                                console.log(data);
+                                storeList = [];
+                                for (var i = 0; i < data.length; i++) {
+                                    storeList.push(getBeverages(data[i]))
+                                }
+                                $scope.stores = storeList;
+                                
                             })
                             .error(function (data, status, headers, config) {
                                 console.log(status);
@@ -316,6 +316,23 @@ angular.module('starter.controllers', [])
             });
     }
 
+    function getBeverages(store) {
+        var beverages = [];
+        for (var j = 0; j < store.prices.length; j++) {
+            $http.get('http://bev-api.appspot.com/Beverage?id=' + encodeURIComponent(store.prices[j].beverage))
+                .success(function (data, status, headers, config) {
+                    beverages.push(data[0]);
+                })
+                .error(function (data, status, headers, config) {
+                    console.log(status);
+                })
+        }
+        var storeInfo = {
+            store: store,
+            beverages: beverages
+        };
+        return storeInfo;
+    }
 
 });
 
