@@ -57,6 +57,10 @@ angular.module('starter.services', [])
         return $http.delete(urlBase + 'Beverage/' + beverageID);
     };
 
+    Beverages.getLocation = function (locationData) {
+        return $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + locationData.latitude + ',' + locationData.longitude + '&key=AIzaSyD2QqNMZck66iTtu6lrdTxMmmi5rX6kr_8');
+    };
+
     return Beverages;
 
 });

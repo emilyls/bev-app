@@ -265,7 +265,9 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('LocationCtrl', function ($scope, $cordovaGeolocation) {
+.controller('LocationCtrl', function ($scope, $cordovaGeolocation, $http) {
+
+    
     
     $scope.getLocation = function () {
         var posOptions = { timeout: 10000, enableHighAccuracy: false };
@@ -274,7 +276,30 @@ angular.module('starter.controllers', [])
             .then(function (position) {
                 var lat = position.coords.latitude;
                 var long = position.coords.longitude;
-                console.log(lat + '   ' + long);
+                $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=')
+                    .success(function (data, status, headers, config) {
+                        console.log(data.results[0]);
+                        for (var i = 0; i < data.results[0].address_components.length; i++) {
+                            if (data.results[0].address_components[i].types[0] == "administrative_area_level_1") {
+                                $scope.state = data.results[0].address_components[i].short_name;       // STATE
+                            }
+                            else if (data.results[0].address_components[i].types[0] == "locality") {
+                                $scope.city = data.results[0].address_components[i].long_name;        // CITY
+                            }
+
+                            else if (data.results[0].address_components[i].types[0] == "country") {
+                                $scope.country = data.results[0].address_components[i].short_name;
+                            }
+                        }
+                        
+                        
+                    })
+                    .error(function (data, status, headers, config) {
+                        console.log(status);
+                    })
+
+                $scope.lat = lat;
+                $scope.long = long;
             }, function (error) {
                 console.log(error);
             });
