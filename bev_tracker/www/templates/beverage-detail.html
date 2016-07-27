@@ -33,7 +33,7 @@
             <button class="button icon-left ion-android-close" ng-click="closeModal(1)"></button>
             <form name="reviewForm" class="list" ng-submit="AddReview(review)">
                 <label class="item item-input">
-                    <input name="rating" type="number" placeholder="Rating" min="0" max="10" ng-model="review.rating" required />
+                    <input name="rating" type="number" placeholder="Rating" min="0" max="10" step="0.1" ng-model="review.rating" required />
                 </label>
                 <label class="item item-input">
                     <textarea placeholder="Notes" ng-model="review.notes"></textarea>
