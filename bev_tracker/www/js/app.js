@@ -67,13 +67,21 @@ angular.module('starter', ['ionic', 'ngCordova', 'ui.router', 'starter.controlle
         }
       }
     })
-
   .state('tab.location', {
     url: '/location',
     views: {
       'tab-location': {
         templateUrl: 'templates/tab-location.html',
         controller: 'LocationCtrl'
+      }
+    }
+  })
+  .state('tab.location-detail', {
+    url: '/location/:beverageId',
+    views: {
+      'tab-location': {
+        templateUrl: 'templates/location-detail.html',
+        controller: 'BeverageDetailCtrl'
       }
     }
   });
