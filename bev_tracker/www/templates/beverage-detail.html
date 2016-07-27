@@ -5,17 +5,17 @@
         <h5 ng-if="average">Average Rating = {{average | number : 2}}</h5>
         <div class="list list-inset">
             <div class="item" ng-repeat="rating in beverage.ratings">
-                {{rating.value}}
+                {{rating.value}} 
                 <div>{{rating.notes}}</div>
             </div>
             <button class="button icon-left ion-android-add-circle" ng-click="openModal(1)">New Review</button>
         </div>
         <div class="list">
             <div ng-repeat="store in bevStores">
-                <label class="list">
+                <div class="list">
                         <h4>{{store.store.name}}: ${{store.price.price | number : 2}} - {{store.price.size}} {{store.price.units}}</h4>
                         <div>{{store.store.address.street}}, {{store.store.address.city}}, {{store.store.address.state}}</div>
-                </label>
+                </div>
             </div>
             <button class="button icon-left ion-android-add-circle" checked ng-click="openModal(2)">Add Price Info</button>
         </div>

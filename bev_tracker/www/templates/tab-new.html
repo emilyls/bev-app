@@ -3,10 +3,10 @@
     <form name="new_bev_form" class="list">
         <div>
             <label class="item item-input">
-                <input type="text" placeholder="Beverage Name" ng-model="bev.bev_name" />
+                <input name="bev_name" type="text" placeholder="Beverage Name" ng-model="bev.bev_name" required />
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="Brand Name" ng-model="bev.brand_name" />
+                <input name="brand_name" type="text" placeholder="Brand Name" ng-model="bev.brand_name" required />
             </label>
             <label class="item item-input">
                 <input type="number" placeholder="Rating" ng-model="bev.value" min="0" max="10" name="rating" />
@@ -15,6 +15,8 @@
                 <textarea ng-model="bev.notes" placeholder="Notes"></textarea>
             </label>
         </div>
+        <span ng-show="new_bev_form.bev_name.$error.required == true || new_bev_form.brand_name.$error.required == true" style="color:red">* beverage and brand names are required</span>
+
     </form>
   </ion-content>
     <ion-footer-bar class="bar bar-footer bar-balanced">

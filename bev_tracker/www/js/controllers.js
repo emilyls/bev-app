@@ -5,19 +5,25 @@ angular.module('starter.controllers', [])
     $scope.stores;
     $scope.status;
 
+    init();
 
-    $scope.bev = {};
-
+    function init() {
+        $scope.$on('$ionicView.enter', function (e) {
+            $scope.bev = {};
+        });
+    }
+    
+    
     $scope.AddBeverage = function (data) {
-        newBev = {
-            bev_name: data.bev_name,
-            brand_name: data.brand_name
-        };
+        var newBev = {};
+        var newRating = {};
 
+        if (data.bev_name && data.brand_name) {
+            newBev.bev_name = data.bev_name;
+            newBev.brand_name = data.brand_name;
+        }
         if (data.value) {
-            newRating = {
-                value: data.value
-            };
+            newRating.value = data.value;
             if (data.notes) {
                 newRating.notes = data.notes;
             }
@@ -27,12 +33,14 @@ angular.module('starter.controllers', [])
             .then(function (response) {
                 newRating.bev_id = response.data.id;
                 $scope.bev = {};
-                Beverages.addRating(encodeData(newRating))
-                    .then(function (response) {
-                        console.log(response);
-                    }, function (error) {
-                        console.log(error);
-                    });
+                if (newRating) {
+                    Beverages.addRating(encodeData(newRating))
+                        .then(function (response) {
+                            console.log(response);
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
             }, function (error) {
                 console.log(error);
                 $scope.status = 'Unable to add beverage: ' + error.message;
@@ -257,10 +265,22 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('LocationCtrl', function ($scope, $cordovaGeolocation) {
+    
+    $scope.getLocation = function () {
+        var posOptions = { timeout: 10000, enableHighAccuracy: false };
+        $cordovaGeolocation
+            .getCurrentPosition(posOptions)
+            .then(function (position) {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+                console.log(lat + '   ' + long);
+            }, function (error) {
+                console.log(error);
+            });
+    }
+
+
 });
 
 
