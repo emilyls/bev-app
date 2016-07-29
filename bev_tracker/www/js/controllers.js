@@ -1,5 +1,6 @@
 angular.module('bev_tracker.controllers', [])
 
+// Controller for adding a new beverage
 .controller('NewCtrl', function ($scope, Beverages, $http) {
 
     $scope.stores;
@@ -7,12 +8,13 @@ angular.module('bev_tracker.controllers', [])
 
     init();
 
+    // Ensure the form is clear every time the tab is opened, no data is saved
+    // if the user navigates to another tab
     function init() {
         $scope.$on('$ionicView.enter', function (e) {
             $scope.bev = {};
         });
     }
-    
     
     $scope.AddBeverage = function (data) {
         var newBev = {};
@@ -31,19 +33,18 @@ angular.module('bev_tracker.controllers', [])
 
         Beverages.addBeverage(encodeData(newBev))
             .then(function (response) {
-                newRating.bev_id = response.data.id;
                 $scope.bev = {};
                 if (newRating) {
+                    newRating.bev_id = response.data.id;
                     Beverages.addRating(encodeData(newRating))
                         .then(function (response) {
-                            console.log(response);
+                            console.log('Beverage Added')
                         }, function (error) {
                             console.log(error);
                         });
                 }
             }, function (error) {
                 console.log(error);
-                $scope.status = 'Unable to add beverage: ' + error.message;
             });
       
     }
@@ -54,8 +55,6 @@ angular.module('bev_tracker.controllers', [])
     $scope.status;
     $scope.beverages;
 
-
-
     init();
     function init() {
         $scope.$on('$ionicView.enter', function (e) {
@@ -64,7 +63,7 @@ angular.module('bev_tracker.controllers', [])
                         $scope.bev = {};
                         $scope.beverages = response.data;
                     }, function (error) {
-                        $scope.status = 'Unable to load beverages: ' + error.message;
+                        console.log(error);
                     });
         });
     }
@@ -73,7 +72,6 @@ angular.module('bev_tracker.controllers', [])
 
 .controller('BeverageDetailCtrl', function ($scope, $stateParams, Beverages, $ionicModal, $state) {
 
-    $scope.status;
     $scope.beverage;
     $scope.average;
     $scope.bevStores;
@@ -105,7 +103,7 @@ angular.module('bev_tracker.controllers', [])
                 }
                 $scope.average = total / count;
             }, function (error) {
-                $scope.status = 'Unable to load beverage details ' + error.message;
+                console.log(error);
             });
     }
 
@@ -133,7 +131,7 @@ angular.module('bev_tracker.controllers', [])
                     }
                 }
             }, function (error) {
-                $scope.status = 'Unable to load stores: ' + error.message;
+                console.log(error);
             });
     }
 
@@ -205,7 +203,6 @@ angular.module('bev_tracker.controllers', [])
                 getBeverage();
             }, function (error) {
                 console.log(error);
-                $scope.status = 'Unable to add review: ' + error.message;
             });
         $scope.closeModal(1);
     };
@@ -299,7 +296,7 @@ angular.module('bev_tracker.controllers', [])
                 }
                 $scope.average = total / count;
             }, function (error) {
-                $scope.status = 'Unable to load beverage details ' + error.message;
+                console.log(error);
             });
     }
 
@@ -399,7 +396,6 @@ angular.module('bev_tracker.controllers', [])
                 getBeverage();
             }, function (error) {
                 console.log(error);
-                $scope.status = 'Unable to add review: ' + error.message;
             });
         $scope.closeModal(1);
     };

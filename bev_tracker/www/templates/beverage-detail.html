@@ -98,10 +98,10 @@
                 <label class="item item-input">
                     <input name="country" type="text" placeholder="Country" ng-model="store.country" required />
                 </label>
-                <span ng-show="storeForm.name.$error.required == true || storeForm.street.$error.required == true || storeForm.city.$error.required == true || storeForm.state.$error.required == true || storeForm.country.$error.required == true" style="color:red">* all fields are required</span>
+                <span ng-show="storeForm.name.$error.required == true || storeForm.street.$error.required == true || storeForm.city.$error.required == true 
+                      || storeForm.state.$error.required == true || storeForm.country.$error.required == true" style="color:red">* all fields are required</span>
                 <button type="submit" class="button button-block button-positive">Submit</button>
             </form>
         </ion-content>
     </div>
-
 </script>
