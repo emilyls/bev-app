@@ -1,6 +1,6 @@
 // Beverage Tracker App
 
-angular.module('bev_tracker', ['ionic', 'ngCordova', 'ui.router', 'bev_tracker.controllers', 'bev_tracker.services'])
+angular.module('bev_tracker', ['ionic', 'ngCordova', 'ngCordovaOauth', 'ui.router', 'bev_tracker.controllers', 'bev_tracker.services'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -56,9 +56,18 @@ angular.module('bev_tracker', ['ionic', 'ngCordova', 'ui.router', 'bev_tracker.c
         controller: 'LocationDetailCtrl'
       }
     }
-  });
+  })
+    .state('tab.account', {
+        url: '/account',
+        views: {
+            'tab-account': {
+                templateUrl: 'templates/tab-account.html',
+                controller: 'AccountCtrl'
+            }
+        }
+    });
 
-  // efault tab
+  // default tab
   $urlRouterProvider.otherwise('/tab/beverages');
 
 });

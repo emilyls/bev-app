@@ -1,5 +1,37 @@
 angular.module('bev_tracker.controllers', [])
 
+
+.controller('AccountCtrl', function ($scope, Beverages, $cordovaOauth) {
+
+    $scope.googleLogin = function () {
+        //$cordovaOauth.google("957738399987-9epk0j4jne0mgm829q0mhh5sec3cqbhd.apps.googleusercontent.com", ["https://www.googleapis.com/auth/contacts.readonly"]).then(function (result) {
+        //    console.log("Response Object -> " + JSON.stringify(result));
+        //    $scope.result = JSON.stringify(result);
+
+        //    if (result && !result.error) {
+                gapi.client.load('https://people.googleapis.com/$discovery/rest', 'v1', listConnectionNames);
+        //    }
+        //}, function (error) {
+        //    console.log("Error -> " + error);
+        //});
+
+
+    }
+
+    function listConnectionNames() {
+        var request = gapi.client.people.people.connections.list({
+            'resourceName': 'people/me',
+            'pageSize': 10,
+        });
+
+        request.execute(function (resp) {
+            $scope.connections = resp.connections;
+        });
+    }
+
+
+})
+
 // Controller for adding a new beverage
 .controller('NewCtrl', function ($scope, Beverages, $http) {
 

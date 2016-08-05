@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
       <!-- REQUIRED FOR GEOLOCATION -->
-    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' *">
+    <meta http-equiv="Content-Security-Policy" content="default-src https://www.googleapis.com *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src 'self' 'unsafe-inline' *">
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -16,7 +16,9 @@
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
+      <script src="js/google.com.api.js"></script>
     <!-- cordova script (this will be a 404 during development) -->
+    <script src="lib/ng-cordova-oauth/dist/ng-cordova-oauth.min.js"></script>  
     <script src="js/ng-cordova.js"></script>
     <script src="cordova.js"></script>
     <!-- your app's js -->
