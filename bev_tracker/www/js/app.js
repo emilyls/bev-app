@@ -65,6 +65,15 @@ angular.module('bev_tracker', ['ionic', 'ngStorage', 'ngCordova', 'ngCordovaOaut
                 controller: 'AccountCtrl'
             }
         }
+    })
+    .state('tab.account-detail', {
+        url: '/account/:beverageId/:beverageName/:brandName/:userNotes',
+        views: {
+            'tab-account': {
+                templateUrl: 'templates/account-detail.html',
+                controller: 'AccountDetailCtrl'
+            }
+        }
     });
 
   // default tab

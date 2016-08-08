@@ -42,6 +42,75 @@ angular.module('bev_tracker.controllers', [])
 
 })
 
+.controller('AccountDetailCtrl', function ($scope, $stateParams, Beverages, LocalStorage, $ionicModal, $ionicPopup, $state) {
+
+    $scope.beverage = {};
+
+    init();
+    function init() {
+        //$scope.beverage.user_notes = $stateParams.userNotes;
+        $scope.$on('$ionicView.enter', function (e) {
+            getBeverage();
+        });
+    }
+
+    function getBeverage() {
+        $scope.beverage.bev_id = parseInt($stateParams.beverageId, 10);
+        $scope.beverage.bev_name = $stateParams.beverageName;
+        $scope.beverage.brand_name = $stateParams.brandName;
+        $scope.beverage.user_notes = $stateParams.userNotes;
+    }
+
+    $ionicModal.fromTemplateUrl('addNotes.html', {
+        id: '1',
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.oModal = modal;
+    });
+
+    $scope.openModal = function (index) {
+        $scope.oModal.show();
+    };
+    $scope.closeModal = function (index) {
+        $scope.notes = {};
+        $scope.oModal.hide();
+    };
+    $scope.$on('$destroy', function () {
+        $scope.oModal.remove();
+    });
+
+    $scope.AddNotes = function (notes) {
+        var notes_data = {};
+        notes_data.favorite_id = parseInt($stateParams.beverageId, 10);
+        notes_data.user_notes = notes;
+
+        if (LocalStorage.loggedIn) {
+            var id_token = LocalStorage.getToken().id_token;
+            Beverages.addNotes(encodeURI(id_token), encodeData(notes_data))
+                .then(function (result) {
+                    $scope.beverage.user_notes = notes;
+                    $stateParams.userNotes = notes;
+                }, function (error) {
+                    console.log(error);
+                });
+        }
+        $scope.closeModal(1);
+    };
+
+    $scope.DeleteFavorite = function (favorite_id) {
+        if (LocalStorage.loggedIn) {
+            var id_token = LocalStorage.getToken().id_token;
+            Beverages.deleteFavorite(encodeURI(favorite_id))
+            .then(function (result) {
+                $state.go('tab.account');
+            }, function (error) {
+                console.log(error);
+            });
+        }
+    };
+
+})
 
 
 
