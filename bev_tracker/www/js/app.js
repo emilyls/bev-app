@@ -1,6 +1,6 @@
 // Beverage Tracker App
 
-angular.module('bev_tracker', ['ionic', 'ngCordova', 'ngCordovaOauth', 'ui.router', 'bev_tracker.controllers', 'bev_tracker.services'])
+angular.module('bev_tracker', ['ionic', 'ngStorage', 'ngCordova', 'ngCordovaOauth', 'ui.router', 'bev_tracker.controllers', 'bev_tracker.services'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {

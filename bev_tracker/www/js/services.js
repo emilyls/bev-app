@@ -1,5 +1,26 @@
 angular.module('bev_tracker.services', [])
 
+.factory('LocalStorage', function ($localStorage) {
+    LocalStorage = {};
+    LocalStorage.loggedIn = false;
+
+    LocalStorage.login = function (token) {
+        $localStorage.user = token;
+        LocalStorage.loggedIn = true;
+    }
+
+    LocalStorage.logout = function () {
+        LocalStorage.loggedIn = false;
+        delete $localStorage.token;
+    }
+
+    LocalStorage.getToken = function () {
+        return $localStorage.user;
+    }
+
+    return LocalStorage;
+})
+
 .factory('Beverages', function ($http) {
 
     var urlBase = "http://bev-api.appspot.com/";
@@ -20,6 +41,15 @@ angular.module('bev_tracker.services', [])
     Beverages.getStoresByLocation = function (city, state, country) {
         return $http.get(urlBase + 'Store?city=' + city + '&state=' + state);
     };
+
+    Beverages.getAccount = function (id_token) {
+        return $http({
+            url: urlBase + 'User',
+            method: 'POST',
+            params: { 'id_token': id_token }
+        });
+    }
+    
    
     Beverages.addRating = function (ratingData) {
         return $http({
@@ -59,6 +89,30 @@ angular.module('bev_tracker.services', [])
 
     Beverages.deleteBeverage = function (beverageID) {
         return $http.delete(urlBase + 'Beverage/' + beverageID);
+    };
+
+    Beverages.addFavorite = function (id_token, favoriteData) {
+        return $http({
+            method: 'POST',
+            url: urlBase + 'User',
+            data: favoriteData,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            params: { 'id_token': id_token }
+        });
+    };
+
+    Beverages.deleteFavorite = function (favoriteID) {
+        return $http.delete(urlBase + 'User/' + favoriteID);
+    };
+
+    Beverages.addNotes = function (id_token, favoriteData) {
+        return $http({
+            method: 'PUT',
+            url: urlBase + 'User',
+            data: favoriteData,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            params: { 'id_token': id_token }
+        });
     };
 
 

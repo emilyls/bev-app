@@ -1,36 +1,50 @@
 angular.module('bev_tracker.controllers', [])
 
 
-.controller('AccountCtrl', function ($scope, Beverages, $cordovaOauth) {
+.controller('AccountCtrl', function ($scope, $cordovaOauth, $http, LocalStorage) {
 
+    init();
+    function init() {
+        $scope.$on('$ionicView.enter', function (e) {
+            getFavorites();
+        });
+    }
+
+    function getFavorites() {
+        $scope.loggedIn = LocalStorage.loggedIn;
+        if ($scope.loggedIn) {
+            var id_token = LocalStorage.getToken().id_token;
+            Beverages.getAccount(encodeURI(id_token))
+                .then(function (result) {
+                    $scope.result = result;
+                    if (result.status = 200) {
+                        $scope.favorites = result.data;
+                    }
+                }, function (error) {
+                    $scope.result = error;
+                    console.log(error);
+                });
+        }
+    }
+     
     $scope.googleLogin = function () {
-        //$cordovaOauth.google("957738399987-9epk0j4jne0mgm829q0mhh5sec3cqbhd.apps.googleusercontent.com", ["https://www.googleapis.com/auth/contacts.readonly"]).then(function (result) {
-        //    console.log("Response Object -> " + JSON.stringify(result));
-        //    $scope.result = JSON.stringify(result);
 
-        //    if (result && !result.error) {
-                gapi.client.load('https://people.googleapis.com/$discovery/rest', 'v1', listConnectionNames);
-        //    }
-        //}, function (error) {
-        //    console.log("Error -> " + error);
-        //});
+        $cordovaOauth.google("957738399987-9epk0j4jne0mgm829q0mhh5sec3cqbhd.apps.googleusercontent.com", ["https://www.googleapis.com/auth/userinfo.email"]).then(function (result) {
+            if (result && !result.error) {
+                LocalStorage.login(result)
+                getFavorites();       
+            }
 
-
-    }
-
-    function listConnectionNames() {
-        var request = gapi.client.people.people.connections.list({
-            'resourceName': 'people/me',
-            'pageSize': 10,
-        });
-
-        request.execute(function (resp) {
-            $scope.connections = resp.connections;
         });
     }
-
 
 })
+
+
+
+
+
+
 
 // Controller for adding a new beverage
 .controller('NewCtrl', function ($scope, Beverages, $http) {
@@ -102,7 +116,7 @@ angular.module('bev_tracker.controllers', [])
    
 })
 
-.controller('BeverageDetailCtrl', function ($scope, $stateParams, Beverages, $ionicModal, $state) {
+.controller('BeverageDetailCtrl', function ($scope, $stateParams, Beverages, LocalStorage, $ionicModal, $ionicPopup, $state) {
 
     $scope.beverage;
     $scope.average;
@@ -165,6 +179,33 @@ angular.module('bev_tracker.controllers', [])
             }, function (error) {
                 console.log(error);
             });
+    }
+
+    $scope.addFavorite = function (bev_id) {
+        if (!LocalStorage.loggedIn) {
+            $ionicPopup.alert({
+                title: 'Please Log In',
+                template: 'You cannot save favorites until you have logged into your account.'
+            });
+        }
+        else {
+            var token = LocalStorage.getToken();
+            console.log(token)
+            data = {
+                'favorite_id': bev_id
+            };
+
+            Beverages.addFavorite(encodeURI(token.id_token), encodeData(data))
+                .then(function (response) {
+                    $scope.result = response;
+                    $ionicPopup.alert({
+                        title: 'Success',
+                        template: 'Added to your favorites!'
+                    });
+                }, function (error) {
+                    console.log(error);
+                });
+        }
     }
 
     $ionicModal.fromTemplateUrl('addReview.html', {
