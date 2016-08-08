@@ -1,7 +1,7 @@
 angular.module('bev_tracker.controllers', [])
 
 
-.controller('AccountCtrl', function ($scope, $cordovaOauth, $http, LocalStorage) {
+.controller('AccountCtrl', function ($scope, $cordovaOauth, $http, LocalStorage, Beverages) {
 
     init();
     function init() {
@@ -16,26 +16,28 @@ angular.module('bev_tracker.controllers', [])
             var id_token = LocalStorage.getToken().id_token;
             Beverages.getAccount(encodeURI(id_token))
                 .then(function (result) {
-                    $scope.result = result;
                     if (result.status = 200) {
                         $scope.favorites = result.data;
                     }
                 }, function (error) {
-                    $scope.result = error;
                     console.log(error);
                 });
         }
     }
      
     $scope.googleLogin = function () {
-
         $cordovaOauth.google("957738399987-9epk0j4jne0mgm829q0mhh5sec3cqbhd.apps.googleusercontent.com", ["https://www.googleapis.com/auth/userinfo.email"]).then(function (result) {
             if (result && !result.error) {
-                LocalStorage.login(result)
+                LocalStorage.login(result);
                 getFavorites();       
             }
-
         });
+    }
+
+    $scope.googleLogout = function () {
+        LocalStorage.logout();
+        $scope.loggedIn = LocalStorage.loggedIn;
+        $scope.favorites = [];
     }
 
 })
@@ -104,13 +106,13 @@ angular.module('bev_tracker.controllers', [])
     init();
     function init() {
         $scope.$on('$ionicView.enter', function (e) {
-                Beverages.getAllBeverages()
-                    .then(function (response) {
-                        $scope.bev = {};
-                        $scope.beverages = response.data;
-                    }, function (error) {
-                        console.log(error);
-                    });
+            Beverages.getAllBeverages()
+                .then(function (response) {
+                    $scope.bev = {};
+                    $scope.beverages = response.data;
+                }, function (error) {
+                    console.log(error);
+                });
         });
     }
    

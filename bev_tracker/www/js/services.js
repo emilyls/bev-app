@@ -41,16 +41,7 @@ angular.module('bev_tracker.services', [])
     Beverages.getStoresByLocation = function (city, state, country) {
         return $http.get(urlBase + 'Store?city=' + city + '&state=' + state);
     };
-
-    Beverages.getAccount = function (id_token) {
-        return $http({
-            url: urlBase + 'User',
-            method: 'POST',
-            params: { 'id_token': id_token }
-        });
-    }
-    
-   
+     
     Beverages.addRating = function (ratingData) {
         return $http({
             method: 'PUT',
@@ -90,6 +81,15 @@ angular.module('bev_tracker.services', [])
     Beverages.deleteBeverage = function (beverageID) {
         return $http.delete(urlBase + 'Beverage/' + beverageID);
     };
+
+
+    Beverages.getAccount = function (id_token) {
+        return $http({
+            url: urlBase + 'User',
+            method: 'POST',
+            params: { 'id_token': id_token }
+        });
+    }
 
     Beverages.addFavorite = function (id_token, favoriteData) {
         return $http({
