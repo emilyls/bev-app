@@ -69,10 +69,10 @@ angular.module('bev_tracker.controllers', [])
     });
 
     $scope.openModal = function (index) {
+        $scope.notes = $scope.beverage.user_notes;
         $scope.oModal.show();
     };
     $scope.closeModal = function (index) {
-        $scope.notes = {};
         $scope.oModal.hide();
     };
     $scope.$on('$destroy', function () {
