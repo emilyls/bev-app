@@ -48,14 +48,13 @@ angular.module('bev_tracker.controllers', [])
 
     init();
     function init() {
-        //$scope.beverage.user_notes = $stateParams.userNotes;
         $scope.$on('$ionicView.enter', function (e) {
             getBeverage();
         });
     }
 
     function getBeverage() {
-        $scope.beverage.bev_id = parseInt($stateParams.beverageId, 10);
+        $scope.beverage.bev_id = $stateParams.beverageId;
         $scope.beverage.bev_name = $stateParams.beverageName;
         $scope.beverage.brand_name = $stateParams.brandName;
         $scope.beverage.user_notes = $stateParams.userNotes;
@@ -101,7 +100,7 @@ angular.module('bev_tracker.controllers', [])
     $scope.DeleteFavorite = function (favorite_id) {
         if (LocalStorage.loggedIn) {
             var id_token = LocalStorage.getToken().id_token;
-            Beverages.deleteFavorite(encodeURI(favorite_id))
+            Beverages.deleteFavorite(id_token, encodeURI(favorite_id))
             .then(function (result) {
                 $state.go('tab.account');
             }, function (error) {

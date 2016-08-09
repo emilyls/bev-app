@@ -101,7 +101,7 @@ angular.module('bev_tracker.services', [])
         });
     };
 
-    Beverages.deleteFavorite = function (favoriteID) {
+    Beverages.deleteFavorite = function (id_token, favoriteID) {
         return $http({
             method: 'DELETE',
             url: urlBase + 'User/' + favoriteID,
